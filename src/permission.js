@@ -36,9 +36,11 @@ router.beforeEach(async(to, from, next) => {
           await store.dispatch('user/getInfo')
           // get route
           await store.dispatch('user/initRouters').then((resp) => { // 生成可访问的路由表
+            console.log(resp)
             router.addRoutes(resp) // 动态添加可访问路由表
-            const agumentroutes = JSON.parse(JSON.stringify(resp))
-            router.options.routes = constantRoutes.concat(agumentroutes) // 更新路由表并保留原有路由
+            // const agumentroutes = JSON.parse(JSON.stringify(resp))
+            // console.log(agumentroutes)
+            router.options.routes = constantRoutes.concat(resp) // 更新路由表并保留原有路由
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })
           next()

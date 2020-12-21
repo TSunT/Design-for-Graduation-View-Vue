@@ -94,8 +94,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       getRouters(state.token).then((resp) => {
         var resproutes = formatRoutes(resp.obj)
-        console.log(resproutes)
         commit('INIT_ROUTERS', resproutes)
+        console.log('after format...')
+        console.log(resproutes)
         resolve(resproutes)
       }).catch(error => {
         reject(error)
@@ -107,9 +108,12 @@ const actions = {
 export const formatRoutes = (routes) => {
   const fmRoutes = []
   routes.forEach(router => {
-    var {
+    let {
+      // eslint-disable-next-line prefer-const
       path,
+      // eslint-disable-next-line prefer-const
       component,
+      // eslint-disable-next-line prefer-const
       name,
       children
     } = router
@@ -125,7 +129,7 @@ export const formatRoutes = (routes) => {
         path: path,
         name: name,
         children: children,
-        component: (resolve) => {
+        component: resolve => {
           if (component.startsWith('Home')) {
             require(['../../components/' + component + '.vue'], resolve)
           } else if (component.startsWith('Admin')) {
