@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import { constantRoutes } from '@/router'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -36,11 +37,10 @@ router.beforeEach(async(to, from, next) => {
           // get route
           await store.dispatch('user/initRouters').then((resp) => { // 生成可访问的路由表
             router.addRoutes(resp) // 动态添加可访问路由表
-            router.options.routes = resp
+            const agumentroutes = JSON.parse(JSON.stringify(resp))
+            router.options.routes = constantRoutes.concat(agumentroutes) // 更新路由表并保留原有路由
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })
-          // add route
-          // this.$router.options.routes = store.state.routes
           next()
         } catch (error) {
           // remove token and go to login page to re-login
